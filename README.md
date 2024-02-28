@@ -64,4 +64,42 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).e
+
+## Enabling Xdebug
+1. In the file .env add line
+    SAIL_XDEBUG_MODE=develop,debug
+2. Add XDebug configuration to vendor/laravel/sail/runtimes/8.2/php.ini and rebuild laravel/testimage in docker 
+   or in docker container "laravel.test-1" etc/php/8.2/cli/conf.d/99-sail.ini add Xdebug configuration
+    8.2 - php version you use. This configuration is needed when debugin not in browser. If debuging in browser, then set up browser extension "Xdebug helper" 
+    and then no need for php.ini XDebug configuration.
+ [XDebug]
+xdebug.start_with_request = yes
+xdebug.show_local_vars = on
+xdebug.mode = debug
+xdebug.discover_client_host = true
+xdebug.client_host = host.docker.internal
+xdebug.client_port = 9003
+xdebug.idekey=VSCODE
+
+3. IDE VSCode. Configure Extension PHP Debug
+
+launch.json
+ {
+            "name": "Listen for Xdebug",
+            "type": "php",
+            "request": "launch",
+            "port": 9003,
+            "pathMappings": {
+                "/var/www/html": "${workspaceFolder}"
+            },
+            "hostname": "localhost",
+            "ignore": ["**/vendor/**/*.php"],
+            "xdebugSettings": {
+                "max_data": 65536,
+                "show_hidden": 1,
+                "max_children": 100,
+                "max_depth": 3
+            }
+}
+ 
